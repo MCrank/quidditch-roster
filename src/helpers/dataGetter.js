@@ -1,29 +1,97 @@
 import axios from 'axios';
+import apiKeys from '../../db/apiKeys.json';
 
-const getAllPlayersFromDb = () => axios.get('http://localhost:3003/players');
+const baseUrl = apiKeys.firebaseKeys.databaseURL;
 
-const getPlayersByTeam = teamId => new Promise((resolve, reject) => {
+const getAllPlayersFromDb = () => new Promise((resolve, reject) => {
   axios
-    .get('http://localhost:3003/players')
-    .then((data) => {
-      const allPlayers = data.data;
-      const correctPlayers = allPlayers.filter(x => x.teamId === teamId);
-      resolve(correctPlayers);
+    .get(`${baseUrl}/players.json`)
+    .then((result) => {
+      // Problemm : Result is an object and I need it to be an array
+      const allPlayersObject = result.data;
+      const allPLayersArray = [];
+      if (allPlayersObject != null) {
+        Object.keys(allPlayersObject).forEach((playerId) => {
+          const newPlayer = allPlayersObject[playerId];
+          newPlayer.id = playerId;
+          allPLayersArray.push(newPlayer);
+        });
+      }
+      resolve(allPLayersArray);
     })
-    .catch((err) => {
-      reject(err);
+    .catch((error) => {
+      reject(error);
     });
 });
 
-const getAllTeamsFromDb = () => axios.get('http://localhost:3003/teams');
+const getPlayersByTeam = teamId => new Promise((resolve, reject) => {
+  axios
+    .get(`${baseUrl}/players.json?orderBy="teamId"&equalTo="${teamId}"`)
+    .then((result) => {
+      // Problemm : Result is an object and I need it to be an array
+      const allPlayersObject = result.data;
+      const allPLayersArray = [];
+      if (allPlayersObject != null) {
+        Object.keys(allPlayersObject).forEach((playerId) => {
+          const newPlayer = allPlayersObject[playerId];
+          newPlayer.id = playerId;
+          allPLayersArray.push(newPlayer);
+        });
+      }
+      resolve(allPLayersArray);
+    })
+    .catch((error) => {
+      reject(error);
+    });
+});
 
-const getAllPositionsFromDb = () => axios.get('http://localhost:3003/positions');
+const getAllTeamsFromDb = () => new Promise((resolve, reject) => {
+  axios
+    .get(`${baseUrl}/teams.json`)
+    .then((result) => {
+      // Problemm : Result is an object and I need it to be an array
+      const allPlayersObject = result.data;
+      const allPLayersArray = [];
+      if (allPlayersObject != null) {
+        Object.keys(allPlayersObject).forEach((playerId) => {
+          const newPlayer = allPlayersObject[playerId];
+          newPlayer.id = playerId;
+          allPLayersArray.push(newPlayer);
+        });
+      }
+      resolve(allPLayersArray);
+    })
+    .catch((error) => {
+      reject(error);
+    });
+});
+
+const getAllPositionsFromDb = () => new Promise((resolve, reject) => {
+  axios
+    .get(`${baseUrl}/positions.json`)
+    .then((result) => {
+      // Problemm : Result is an object and I need it to be an array
+      const allPlayersObject = result.data;
+      const allPLayersArray = [];
+      if (allPlayersObject != null) {
+        Object.keys(allPlayersObject).forEach((playerId) => {
+          const newPlayer = allPlayersObject[playerId];
+          newPlayer.id = playerId;
+          allPLayersArray.push(newPlayer);
+        });
+      }
+      resolve(allPLayersArray);
+    })
+    .catch((error) => {
+      reject(error);
+    });
+});
 
 const getFullPlayerInfo = players => Promise.all([getAllTeamsFromDb(), getAllPositionsFromDb()])
   .then((dataArray) => {
     const playersFromDb = players;
-    const teamsFromDb = dataArray[0].data;
-    const positionsFromDb = dataArray[1].data;
+    const teamsFromDb = dataArray[0];
+    const positionsFromDb = dataArray[1];
     const newPlayers = [];
     playersFromDb.forEach((player) => {
       const newPlayer = player;
