@@ -1,0 +1,26 @@
+$darkgray: #5d5a62;
+$darkgray: #5d5a62;
+$lightgray: #bcb8b7;
+$red: #a43e50;
+$gold: #b59071;
+$blue: #1e3f5d;
+$green: #70a69d;
+$yellow: #f2deb5;
+
+$gryffindor: darken($red, 10%);
+$slytherin: darken($green, 20%);
+$hufflepuff: darken($yellow, 20%);
+$ravenclaw: #1e3f5d;
+
+$box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
+
+@mixin default-font($fontsize) {
+  font-size: $fontsize;
+  text-decoration: none;
+  color: white;
+  text-align: center;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  vertical-align: middle;
+  font-family: 'Arial';
+}
