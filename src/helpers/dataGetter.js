@@ -17,7 +17,6 @@ const getAllPlayersFromDb = () => new Promise((resolve, reject) => {
           allPLayersArray.push(newPlayer);
         });
       }
-      console.log(allPLayersArray);
       resolve(allPLayersArray);
     })
     .catch((error) => {
@@ -27,14 +26,22 @@ const getAllPlayersFromDb = () => new Promise((resolve, reject) => {
 
 const getPlayersByTeam = teamId => new Promise((resolve, reject) => {
   axios
-    .get(`${baseUrl}/players.json`)
-    .then((data) => {
-      const allPlayers = data.data;
-      const correctPlayers = allPlayers.filter(x => x.teamId === teamId);
-      resolve(correctPlayers);
+    .get(`${baseUrl}/players.json?orderBy="teamId"&equalTo="${teamId}"`)
+    .then((result) => {
+      // Problemm : Result is an object and I need it to be an array
+      const allPlayersObject = result.data;
+      const allPLayersArray = [];
+      if (allPlayersObject != null) {
+        Object.keys(allPlayersObject).forEach((playerId) => {
+          const newPlayer = allPlayersObject[playerId];
+          newPlayer.id = playerId;
+          allPLayersArray.push(newPlayer);
+        });
+      }
+      resolve(allPLayersArray);
     })
-    .catch((err) => {
-      reject(err);
+    .catch((error) => {
+      reject(error);
     });
 });
 
@@ -52,7 +59,6 @@ const getAllTeamsFromDb = () => new Promise((resolve, reject) => {
           allPLayersArray.push(newPlayer);
         });
       }
-      console.log(allPLayersArray);
       resolve(allPLayersArray);
     })
     .catch((error) => {
@@ -74,7 +80,6 @@ const getAllPositionsFromDb = () => new Promise((resolve, reject) => {
           allPLayersArray.push(newPlayer);
         });
       }
-      console.log(allPLayersArray);
       resolve(allPLayersArray);
     })
     .catch((error) => {
